@@ -1,11 +1,22 @@
-FROM node:18-bullseye
+# client/Dockerfile
+
+FROM node:18-alpine
+
+# Install bash and dependencies (for better shell compatibility)
+RUN apk add --no-cache bash
 
 WORKDIR /app
 
-# Clean install with --omit=optional to prevent native builds
-COPY package.json package-lock.json ./
-RUN npm ci --omit=optional
+# Copy only package.json first for caching
+COPY package*.json ./
 
+# Install dependencies (force install everything, not just production)
+RUN npm install
+
+# Copy the rest of the app
 COPY . .
 
-CMD ["npm", "run", "dev"]
+EXPOSE 5173
+
+# Use npx to make sure vite resolves correctly
+CMD ["npx", "vite", "--host"]

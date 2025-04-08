@@ -1,34 +1,30 @@
+version: "3.8"
+
 services:
   api:
     build:
       context: ./api
     ports:
       - "3000:3000"
-    environment:
-      - PORT=3000
-      - DYNAMODB_ENDPOINT=http://dynamodb:8000
-      - AWS_ACCESS_KEY_ID=fakeMyKeyId
-      - AWS_SECRET_ACCESS_KEY=fakeSecretKey
-    volumes:
-      - ./api:/app
     depends_on:
       - dynamodb
-
-  dynamodb:
-    image: amazon/dynamodb-local
-    ports:
-      - "8000:8000"
-    volumes:
-      - dynamodb_data:/home/dynamodblocal/data
-    command: "-jar DynamoDBLocal.jar -sharedDb dbPath /home/dynamodblocal/data"
+    environment:
+      - AWS_REGION=us-west-2
+      - DYNAMODB_ENDPOINT=http://dynamodb:8000
 
   client:
     build:
       context: ./client
     ports:
       - "5173:5173"
-    volumes:
-      - ./client:/app
+    depends_on:
+      - api
+    environment:
+      - NODE_ENV=development
 
-volumes:
-  dynamodb_data:
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: node-api-dynamodb
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb"
