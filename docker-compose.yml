@@ -1,11 +1,16 @@
 services:
   api:
-    build: .
+    build:
+      context: ./api
     ports:
       - "3000:3000"
     environment:
       - PORT=3000
       - DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - AWS_ACCESS_KEY_ID=fakeMyKeyId
+      - AWS_SECRET_ACCESS_KEY=fakeSecretKey
+    volumes:
+      - ./api:/app
     depends_on:
       - dynamodb
 
@@ -16,6 +21,14 @@ services:
     volumes:
       - dynamodb_data:/home/dynamodblocal/data
     command: "-jar DynamoDBLocal.jar -sharedDb dbPath /home/dynamodblocal/data"
+
+  client:
+    build:
+      context: ./client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
 
 volumes:
   dynamodb_data:
