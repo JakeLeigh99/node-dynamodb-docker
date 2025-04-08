@@ -4,6 +4,9 @@ services:
   api:
     build:
       context: ./api
+    volumes:
+      - ./api:/app
+      - /app/node_modules
     ports:
       - "3000:3000"
     depends_on:
@@ -15,6 +18,9 @@ services:
   client:
     build:
       context: ./client
+    volumes:
+      - ./client:/app
+      - /app/node_modules
     ports:
       - "5173:5173"
     depends_on:
