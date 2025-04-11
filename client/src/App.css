@@ -68,6 +68,11 @@
 
 .no-data {
   text-align: center;
-  color: #888;
+  color: white;
   padding: 16px;
+}
+
+.delete-btn {
+  background-color: rgb(200, 0, 0);
+  padding: 5px 10px;
 }

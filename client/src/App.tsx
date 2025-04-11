@@ -27,9 +27,15 @@ function App() {
     setItems([...items, newItem]);
     setName("");
   };
+
+  const deleteItem = (id: string) => {
+    axios.delete(`http://localhost:3000/api/item/${id}`);
+    setItems(items.filter((item) => item.id !== id));
+  };
+
   return (
     <div>
-      <h1>Items</h1>
+      <h1>Item Tracker</h1>
       <form className="item-form" onSubmit={onSubmit}>
         <input
           className="item-input"
@@ -47,6 +53,7 @@ function App() {
             <tr>
               <th>ID</th>
               <th>Name</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -55,6 +62,14 @@ function App() {
                 <tr key={item.id}>
                   <td>{item.id}</td>
                   <td>{item.name}</td>
+                  <td>
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteItem(item.id)}
+                    >
+                      X
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
